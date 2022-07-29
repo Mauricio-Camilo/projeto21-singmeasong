@@ -109,6 +109,78 @@ describe("recommendation service test suite", () => {
 
     })
 
+    it("should validate get function", async () => {
+        const recommendation : Recommendation = {
+            id: 1,
+            name: "Song name",
+            youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
+            score: 2
+        }
+
+        jest.spyOn(recommendationRepository, 'findAll').mockImplementationOnce(() : any => {
+            return recommendation
+        });
+
+        const result = await recommendationService.get();
+        expect(result).toEqual(recommendation);
+    })
+
+    it("should validate getTop function", async () => {
+        const recommendation : Recommendation = {
+            id: 1,
+            name: "Song name",
+            youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
+            score: 2
+        }
+
+        const amount : number = 5;
+
+        jest.spyOn(recommendationRepository, 'getAmountByScore').mockImplementationOnce(() : any => {
+            return recommendation
+        });
+
+        const result = await recommendationService.getTop(amount);
+        expect(result).toEqual(recommendation);
+    })
+
+    // it("should validate getByScore function", async () => {
+    //     const recommendation : Recommendation = {
+    //         id: 1,
+    //         name: "Song name",
+    //         youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
+    //         score: 2
+    //     }
+
+    //     const scoreFilter : string = "gt";
+
+    //     jest.spyOn(recommendationRepository, 'findAll').mockImplementationOnce(() : any => {
+    //         return recommendation
+    //     });
+
+    //     const result = await recommendationService.getByScore(scoreFilter);
+    //     expect(result).toEqual(recommendation);
+    // })
+
+      it("should validate getRandom function", async () => {
+        const recommendation : Recommendation = {
+            id: 1,
+            name: "Song name",
+            youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
+            score: 2
+        }
+
+        const random = 0.9;
+
+        // jest.spyOn(Math, 'random').mockReturnValue(random);
+
+        jest.spyOn(recommendationRepository, 'findAll').mockImplementationOnce(() : any => {
+            return recommendation
+        });
+
+        const result = await recommendationService.getRandom();
+        expect(result).toEqual(recommendation);
+    })
+
 
     
 })

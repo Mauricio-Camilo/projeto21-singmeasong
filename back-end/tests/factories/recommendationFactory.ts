@@ -23,4 +23,5 @@ export async function postRecommendation (data: Recommendation) {
             youtubeLink
         }
     });
+    return recommendation;
 }

@@ -38,3 +38,24 @@ describe("Recommendation tests suite", () => {
     });
 
 })
+
+describe("Upvote and Updown tests suite", () => {
+    it("given a valid recommendation, up the score", async () => {
+        const recommendationMusic = recommendationFactory.createRecommendation();
+        const recommendation = await recommendationFactory.postRecommendation(recommendationMusic);
+        const response = await supertest(app).post(`/recommendations/${recommendation.id}/upvote`)
+        expect(response.statusCode).toBe(200);
+    })
+
+    it("given a valid recommendation, down the score", async () => {
+        const recommendationMusic = recommendationFactory.createRecommendation();
+        const recommendation = await recommendationFactory.postRecommendation(recommendationMusic);
+        const response = await supertest(app).post(`/recommendations/${recommendation.id}/downvote`)
+        expect(response.statusCode).toBe(200);
+    })
+
+    it("given an invalid recommendation, fail to change", async () => {
+        const response = await supertest(app).post(`/recommendations/500/downvote`)
+        expect(response.statusCode).toBe(404);
+    })
+})

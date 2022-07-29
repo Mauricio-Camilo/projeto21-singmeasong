@@ -2,7 +2,7 @@ import { prisma } from "./../../src/database.js";
 import { faker } from '@faker-js/faker';
 
 export function createRecommendation () {
-    const name = "Musica muito top"
+    const name = faker.music.songName();
     const youtubeLink = "https://www.youtube.com/watch?v=chwyjJbcs1Y"
     return ({
         name,

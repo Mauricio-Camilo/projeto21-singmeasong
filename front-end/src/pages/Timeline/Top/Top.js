@@ -1,3 +1,5 @@
+import React from "react";
+
 import useTopRecommendations from "../../../hooks/api/useTopRecommendations";
 
 import Recommendation from "../../../components/Recommendation";

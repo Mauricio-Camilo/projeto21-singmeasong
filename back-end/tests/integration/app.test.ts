@@ -1,8 +1,8 @@
-import {prisma} from "./../src/database.js";
+import {prisma} from "../../src/database.js";
 import supertest from "supertest";
-import app from "./../src/app.js";
+import app from "../../src/app.js";
 import dotenv from "dotenv";
-import * as recommendationFactory from "./factories/recommendationFactory.js"
+import * as recommendationFactory from "../factories/recommendationFactory.js"
 
 dotenv.config();
 

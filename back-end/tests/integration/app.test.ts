@@ -43,45 +43,58 @@ beforeEach(async () => {
 
 // describe("Upvote and Updown tests suite", () => {
 //     it("given a valid recommendation, up the score", async () => {
-//         const recommendationMusic = recommendationFactory.createRecommendation();
-//         const recommendation = await recommendationFactory.postRecommendation(recommendationMusic);
-//         const response = await supertest(app).post(`/recommendations/${recommendation.id}/upvote`)
+//         const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
+//         const response = await supertest(app).post(`/recommendations/${scenario.id}/upvote`)
 //         expect(response.statusCode).toBe(200);
 //     })
 
 //     it("given a valid recommendation, down the score", async () => {
-//         const recommendationMusic = recommendationFactory.createRecommendation();
-//         const recommendation = await recommendationFactory.postRecommendation(recommendationMusic);
-//         const response = await supertest(app).post(`/recommendations/${recommendation.id}/downvote`)
+//         const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
+//         const response = await supertest(app).post(`/recommendations/${scenario.id}/downvote`)
 //         expect(response.statusCode).toBe(200);
 //     })
 
 //     it("given an invalid recommendation, fail to change score", async () => {
-//         const response = await supertest(app).post(`/recommendations/500/downvote`)
+//         const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
+//         scenario.id = 10;
+//         const response = await supertest(app).post(`/recommendations/${scenario.id}/downvote`)
 //         expect(response.statusCode).toBe(404);
 //     })
 // })
 
-describe("Get recommendations tests suite", () => {
-    it("should return all recommendations", async () => {
+// describe("Get recommendations tests suite", () => {
+//     it("should return all recommendations", async () => {
+//         const scenario = await scenarioFactory.createScenarioTwoMoreThan10Recommendations();
+//         const response = await supertest(app).get("/recommendations");
+//         const index = Math.floor(Math.random() * 9);
+//         expect(response.body.length).toBe(10);
+//         expect(scenario[index]).toEqual(response.body[index]);
+//     })
+
+//     it("should return recommendation by Id", async () => {
+//         const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
+//         const response = await supertest(app).get(`/recommendations/${scenario.id}`);
+//         expect(scenario).toEqual(response.body);
+//     })
+
+//     it("given an invalid id, fail to get recommendation", async () => {
+//         const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
+//         scenario.id = 10;
+//         const response = await supertest(app).get(`/recommendations/${scenario.id}`);
+//         expect(response.statusCode).toBe(404);
+//     })
+// })
+
+describe("Get advanced recommendations tests suite", () => {
+    it("should return random recommendations", async () => {
         const scenario = await scenarioFactory.createScenarioTwoMoreThan10Recommendations();
-        const response = await supertest(app).get("/recommendations");
-        const index = Math.floor(Math.random() * 9);
-        console.log(response.body.length)
-        expect(response.body.length).toBe(10);
-        expect(scenario[index]).toEqual(response.body[index]);
+        const response = await supertest(app).get("/recommendations/random");
+        const checkRecommendation = scenario.find(song => song.name === response.body.name);
+        expect(checkRecommendation).not.toBeUndefined();
     })
 
-    it("should return recommendation by Id", async () => {
-        const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
-        const response = await supertest(app).get(`/recommendations/${scenario.id}`);
-        expect(scenario).toEqual(response.body);
-    })
-
-    it("given an invalid id, fail to get recommendation", async () => {
-        const scenario = await scenarioFactory.createScenarioOneOneRecommendation();
-        scenario.id = 10;
-        const response = await supertest(app).get(`/recommendations/${scenario.id}`);
+    it("no recommendations in the database, should return error", async () => {
+        const response = await supertest(app).get("/recommendations/random");
         expect(response.statusCode).toBe(404);
     })
 })

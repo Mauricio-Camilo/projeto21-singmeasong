@@ -25,7 +25,5 @@ describe("main page suit test", () => {
         cy.wait("@getRecommendation");
 
         cy.contains(song.name).should("be.visible");
-        cy.wait(1000);
-        cy.get("#video").click().end();
     })
 })

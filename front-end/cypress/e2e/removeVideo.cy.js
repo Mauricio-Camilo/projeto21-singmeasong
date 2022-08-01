@@ -29,7 +29,6 @@ describe("main page suit test", () => {
         for (let i = 0; i < removeVideoClicks; i ++) {
             cy.get("#down").click();
         }
-        cy.contains(song.name).should("be.empty");
-
+        cy.get(`article`).should("have.length", 0);
     })
 })

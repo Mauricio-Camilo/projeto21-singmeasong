@@ -17,5 +17,6 @@ describe("top page suit test", () => {
         cy.wait("@getRandomRecommendations");
 
         cy.url().should("equal", `${URL_FRONT}random`);
+        cy.get(`article`).should("have.length", 1);
     })
 })

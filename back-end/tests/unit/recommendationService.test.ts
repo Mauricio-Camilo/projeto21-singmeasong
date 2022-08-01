@@ -79,7 +79,6 @@ describe("recommendation service test suite", () => {
             message: "",
             type: "not_found"
         });
-
     })
 
     it("should validate downvote function", async () => {
@@ -100,13 +99,11 @@ describe("recommendation service test suite", () => {
 
         jest.spyOn(recommendationRepository, 'remove').mockImplementationOnce(() : any => {});
 
-
         await recommendationService.downvote(recommendation.id);
 
         expect(recommendationRepository.find).toBeCalled();
         expect(recommendationRepository.updateScore).toBeCalled();
         expect(recommendationRepository.remove).toBeCalled();
-
     })
 
     it("should validate get function", async () => {
@@ -134,7 +131,6 @@ describe("recommendation service test suite", () => {
         }
 
         const amount : number = 5;
-
         jest.spyOn(recommendationRepository, 'getAmountByScore').mockImplementationOnce(() : any => {
             return recommendation
         });
@@ -143,25 +139,7 @@ describe("recommendation service test suite", () => {
         expect(result).toEqual(recommendation);
     })
 
-    // it("should validate getByScore function", async () => {
-    //     const recommendation : Recommendation = {
-    //         id: 1,
-    //         name: "Song name",
-    //         youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
-    //         score: 2
-    //     }
-
-    //     const scoreFilter : string = "gt";
-
-    //     jest.spyOn(recommendationRepository, 'findAll').mockImplementationOnce(() : any => {
-    //         return recommendation
-    //     });
-
-    //     const result = await recommendationService.getByScore(scoreFilter);
-    //     expect(result).toEqual(recommendation);
-    // })
-
-      it("should validate getRandom function", async () => {
+    it("should validate getRandom function with score <= 10", async () => {
         const recommendation : Recommendation = {
             id: 1,
             name: "Song name",
@@ -171,16 +149,49 @@ describe("recommendation service test suite", () => {
 
         const random = 0.9;
 
-        // jest.spyOn(Math, 'random').mockReturnValue(random);
+        jest.spyOn(Math, 'random').mockReturnValue(random);
 
         jest.spyOn(recommendationRepository, 'findAll').mockImplementationOnce(() : any => {
             return recommendation
         });
 
         const result = await recommendationService.getRandom();
-        expect(result).toEqual(recommendation);
+        expect(recommendationRepository.findAll).toBeCalledWith({
+            score: 10,
+            scoreFilter: "lte"
+        });
     })
 
+    it("should validate getRandom function with score > 10", async () => {
+        const recommendation : Recommendation = {
+            id: 1,
+            name: "Song name",
+            youtubeLink: "https://www.youtube.com/watch?v=chwyjJbcs1Y",
+            score: 12
+        }
 
-    
+        const random = 0.3;
+
+        jest.spyOn(Math, 'random').mockReturnValue(random);
+
+        jest.spyOn(recommendationRepository, "findAll").mockResolvedValueOnce([recommendation] as any)
+
+        const result = await recommendationService.getRandom();
+        expect(recommendationRepository.findAll).toBeCalledWith({
+            score: 10,
+            scoreFilter: "gt"
+        });
+    })
+
+    it("should fail to validate get random", async () => {
+        jest.spyOn(recommendationRepository, "findAll").mockResolvedValue([])
+
+        const promise = recommendationService.getRandom();
+
+        expect(recommendationRepository.findAll).toBeCalled()
+        expect(promise).rejects.toEqual({
+            message: "",
+            type: "not_found"
+        });
+      })
 })

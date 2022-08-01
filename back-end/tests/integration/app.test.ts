@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import * as recommendationFactory from "../factories/recommendationFactory.js";
 import * as scenarioFactory from "../factories/scenarioFactory.js";
 
-
 dotenv.config();
 
 beforeEach(async () => {
@@ -38,7 +37,6 @@ describe("Recommendation tests suite", () => {
         const response = await supertest(app).post("/recommendations").send(recommendationMusic);
         expect(response.statusCode).toBe(422);
     });
-
 })
 
 describe("Upvote and Updown tests suite", () => {
@@ -86,7 +84,7 @@ describe("Get recommendations tests suite", () => {
 })
 
 describe("Get advanced recommendations tests suite", () => {
-    it("should return random recommendations", async () => {
+    it("should return one random recommendation", async () => {
         const scenario = await scenarioFactory.createScenarioTwoMoreThan10Recommendations();
         const response = await supertest(app).get("/recommendations/random");
         const checkRecommendation = scenario.find(song => song.name === response.body.name);
